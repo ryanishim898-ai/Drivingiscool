@@ -1,661 +1,80 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Surviving Man: Castle Slayer</title>
+    <meta charset="UTF-8">
+    <title>Drivings Niche Corner</title>
     <style>
-        body { margin: 0; background: #050805; overflow: hidden; font-family: 'Segoe UI', sans-serif; user-select: none; color: white; }
-        canvas { display: block; background: #111611; margin: 0 auto; }
+        body { display: flex; margin: 0; background: #05060b; color: white; height: 100vh; overflow: hidden; font-family: sans-serif; }
         
-        /* Watermarks & UI Header */
-        #gameTitle { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); font-size: 24px; font-weight: bold; text-shadow: 0 0 10px #00ffcc; color: #00ffcc; z-index: 5; pointer-events: none; letter-spacing: 2px; }
-        #watermark { position: absolute; bottom: 10px; right: 10px; font-size: 12px; color: rgba(255,255,255,0.4); z-index: 5; pointer-events: none; font-weight: bold; }
-        #statsUI { position: absolute; top: 45px; left: 10px; font-size: 13px; line-height: 1.5; text-shadow: 2px 2px #000; pointer-events: none; z-index: 4; }
-
-        /* Main Menu screen */
-        #mainMenu { position: absolute; top:0; left:0; width:100vw; height:100vh; background: radial-gradient(circle, #1a261a 0%, #050805 100%); z-index: 20; display: flex; flex-direction: column; justify-content: center; align-items: center; }
-        #mainMenu h1 { font-size: 42px; color: #00ffcc; margin-bottom: 5px; text-shadow: 0 0 20px rgba(0,255,204,0.5); }
-        .menu-btn { padding: 12px 35px; font-size: 16px; font-weight: bold; background: #00ffcc; color: #111; border: none; border-radius: 30px; cursor: pointer; box-shadow: 0 0 15px #00ffcc; transition: 0.2s; margin: 8px; width: 220px; text-align: center; }
-        .menu-btn:active { transform: scale(0.95); }
-
-        /* Leaderboard Modal overlay styling */
-        #leaderboardMenu { display: none; position: absolute; top:0; left:0; width:100vw; height:100vh; background: rgba(5,10,5,0.95); z-index: 25; flex-direction: column; justify-content: center; align-items: center; }
-        #leaderboardBox { background: #0d140d; border: 2px solid #00ffcc; border-radius: 12px; padding: 20px; width: 280px; box-shadow: 0 0 25px rgba(0,255,204,0.3); }
-        #leaderboardBox h2 { color: #00ffcc; text-align: center; margin-top: 0; margin-bottom: 15px; font-size: 22px; letter-spacing: 1px; }
-        .leaderboard-list { width: 100%; margin-bottom: 20px; }
-        .leaderboard-row { display: flex; justify-content: space-between; padding: 8px 10px; border-bottom: 1px solid rgba(0,255,204,0.2); font-size: 14px; font-weight: bold; }
-        .leaderboard-row:nth-child(1) { color: #ffd700; font-size: 16px; } /* Gold */
-        .leaderboard-row:nth-child(2) { color: #c0c0c0; } /* Silver */
-        .leaderboard-row:nth-child(3) { color: #cd7f32; } /* Bronze */
-
-        /* Shop Framework overlay styling */
-        #shopButton { position: absolute; top: 45px; right: 10px; padding: 8px 12px; background: #ffaa00; color: black; border: none; font-weight: bold; border-radius: 5px; cursor: pointer; z-index: 10; box-shadow: 0 0 8px #ffaa00; }
-        #shopMenu { display: none; position: absolute; top: 85px; right: 10px; background: rgba(10,12,10,0.97); border: 2px solid #ffaa00; padding: 10px; border-radius: 8px; width: 270px; max-height: 65vh; overflow-y: auto; z-index: 10; box-shadow: 0 0 20px rgba(0,0,0,0.8); }
-        #shopMenu h3 { color: #ffaa00; margin: 0 0 10px 0; text-align: center; font-size: 16px; border-bottom: 1px solid #ffaa00; padding-bottom: 5px; }
+        #sidebar { 
+            width: 300px; 
+            background: #161b22; 
+            border-right: 1px solid #30363d; 
+            display: flex; 
+            flex-direction: column; 
+            padding: 15px;
+        }
         
-        .upgrade-row { display: flex; flex-direction: column; margin-bottom: 8px; background: rgba(255,255,255,0.05); padding: 6px; border-radius: 4px; border-left: 3px solid #00ffcc; }
-        .upgrade-info { display: flex; justify-content: space-between; font-size: 12px; font-weight: bold; }
-        .upgrade-meta { display: flex; justify-content: space-between; align-items: center; margin-top: 4px; }
-        .upgrade-desc { font-size: 10px; color: #aaa; width: 65%; }
-        .buy-btn { padding: 4px 8px; font-size: 11px; background: #2ecc71; color: white; border: none; border-radius: 3px; cursor: pointer; font-weight: bold; }
-        .buy-btn:disabled { background: #555; color: #888; cursor: not-allowed; }
+        #gameListContainer { 
+            flex-grow: 1; 
+            overflow-y: auto; 
+            padding-right: 5px;
+            margin-top: 10px;
+        }
+
+        #main { flex-grow: 1; display: flex; flex-direction: column; }
+        
+        .search-bar { width: 100%; padding: 12px; margin-bottom: 10px; background: #0f1124; color: white; border: 1px solid #3c096c; border-radius: 4px; box-sizing: border-box; }
+        
+        .card { background: #21262d; padding: 12px; margin-bottom: 8px; cursor: pointer; border-radius: 5px; border: 1px solid #30363d; transition: 0.2s; }
+        .card:hover { border-color: #58a6ff; background: #30363d; }
+        
+        iframe { width: 100%; flex-grow: 1; border: none; }
+        .panic-btn { background: #ff4757; color: white; padding: 12px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; width: 100%; }
     </style>
 </head>
 <body>
 
-    <div id="gameTitle">SURVIVING MAN</div>
-    <div id="watermark">made by drivingishim</div>
-
-    <!-- MAIN MENU -->
-    <div id="mainMenu">
-        <h1>SURVIVING MAN</h1>
-        <p style="color: #6a7f6a; margin-bottom: 30px; font-size: 14px;">Dark Castle Horde Framework</p>
-        <button class="menu-btn" onclick="startGame()">START GAME</button>
-        <button class="menu-btn" style="background:#00a3cc; color:white; box-shadow: 0 0 15px #00a3cc;" onclick="toggleLeaderboard(true)">🏆 LEADERBOARD</button>
-        <button class="menu-btn" style="background:#555; color:#ccc; box-shadow:none; font-size:14px; padding:6px 20px;" onclick="resetSave()">RESET UPGRADES</button>
+<div id="sidebar">
+    <h3>Drivings Niche Corner</h3>
+    <form action="https://www.google.com/search" target="gameFrame" method="GET">
+        <input type="text" name="q" class="search-bar" placeholder="Search Google...">
+    </form>
+    <button class="panic-btn" onclick="goHome()">+ Reset to Google</button>
+    
+    <div id="gameListContainer">
+        <div id="gameGrid"></div>
     </div>
-
-    <!-- LEADERBOARD MENU -->
-    <div id="leaderboardMenu">
-        <div id="leaderboardBox">
-            <h2>🏆 TOP RUNS</h2>
-            <div class="leaderboard-list" id="leaderboardList">
-                <!-- Dynamically populated rows go here -->
-            </div>
-            <button class="menu-btn" style="width:100%; margin:0; padding:10px 0;" onclick="toggleLeaderboard(false)">CLOSE</button>
-        </div>
-    </div>
-
-    <!-- IN-GAME HUD -->
-    <div id="statsUI">
-        <b>Gold:</b> <span id="gold">0</span><br>
-        <b>HP:</b> <span id="hp">100</span>/<span id="maxHpDisplay">100</span><br>
-        <b>Wave:</b> <span id="wave">1</span><br>
-        <b>Kills:</b> <span id="kills">0</span>
-    </div>
-
-    <button id="shopButton" onclick="toggleShop()">📦 SHOP & MODS</button>
-    <div id="shopMenu">
-        <h3>50 MATRIX UPGRADES (MAX LVL 50)</h3>
-        <div id="upgradeListContainer"></div>
-    </div>
-
-    <canvas id="gameCanvas"></canvas>
-
-    <script>
-        const canvas = document.getElementById("gameCanvas");
-        const ctx = canvas.getContext("2d");
-
-        canvas.width = window.innerWidth > 500 ? 500 : window.innerWidth;
-        canvas.height = window.innerHeight;
-
-        // Camera / Pseudo-infinite Scrolling Environment
-        let camera = { x: 0, y: 0 };
-
-        // Base Game Engine State Variables
-        let player = { x: 0, y: 0, screenX: canvas.width / 2, screenY: canvas.height / 2, size: 16, speed: 2.5, hp: 100, maxHp: 100, dir: 1 };
-        let enemies = []; let bullets = []; let gems = [];
-        let gold = 0; let wave = 1; let kills = 0; let score = 0;
-        let isMoving = false; let targetX = player.screenX; let targetY = player.screenY;
-        let shootCooldown = 0; let gameActive = false;
-
-        // Castle Ambient Structures Array
-        let castleStructures = [];
-        function generateCastleStructures() {
-            castleStructures = [];
-            // Generate a grid of environment props relative to map space
-            for(let i = -15; i < 15; i++) {
-                for(let j = -15; j < 15; j++) {
-                    if(Math.random() < 0.25 && (Math.abs(i) > 1 || Math.abs(j) > 1)) {
-                        let type = Math.random() < 0.4 ? 'pillar' : 'brick-wall';
-                        castleStructures.push({
-                            x: i * 160 + (Math.random() * 40 - 20),
-                            y: j * 160 + (Math.random() * 40 - 20),
-                            type: type,
-                            w: type === 'pillar' ? 24 : 45,
-                            h: type === 'pillar' ? 48 : 28
-                        });
-                    }
-                }
-            }
-        }
-
-        // Leaderboard Array
-        let highScores = [];
-
-        // Configuration Array for 50 distinct upgrades scaling to level 50
-        const upgradeDef = [
-            { id: 0,  name: "Max Health Boost", desc: "Increases max HP pool (+15/lvl)", baseCost: 10 },
-            { id: 1,  name: "Movement Engine", desc: "Increases run velocity (+6%/lvl)", baseCost: 15 },
-            { id: 2,  name: "Bullet Velocity", desc: "Projectiles travel faster (+8%/lvl)", baseCost: 12 },
-            { id: 3,  name: "Slayer Fire-Rate", desc: "Decreases weapon weapon lag (-4%/lvl)", baseCost: 20 },
-            { id: 4,  name: "Kunai Precision Damage", desc: "Flat damage amplification (+5/lvl)", baseCost: 25 },
-            { id: 5,  name: "Magnetism Grid", desc: "Expands collection pickup radius (+20px/lvl)", baseCost: 15 },
-            { id: 6,  name: "Nano Regeneration", desc: "Passive health ticking engine (+0.05 HP/lvl)", baseCost: 30 },
-            { id: 7,  name: "Piercing Ammunition", desc: "Bullets pierce through additional targets", baseCost: 40 },
-            { id: 8,  name: "Tax Collector Bonus", desc: "Gold drops multiplied (+15%/lvl)", baseCost: 20 },
-            { id: 9,  name: "Kinetic Shock Wave", desc: "Adds bullet knockback metrics (+3px/lvl)", baseCost: 18 },
-            { id: 10, name: "Thick Iron Plating", desc: "Flat damage reduction scaling (-0.2/lvl)", baseCost: 35 },
-            { id: 11, name: "Vampiric Syringe", desc: "Chance to recover 1 HP on kill (+0.5%/lvl)", baseCost: 50 },
-            { id: 12, name: "Guardian Orbit Circle", desc: "Orbits a protective shield barrier around you", baseCost: 60 },
-            { id: 13, name: "Giant Core Growth", desc: "Increases player scale radius safely (+1px/lvl)", baseCost: 15 },
-            { id: 14, name: "Micro-Evasion Core", desc: "Reduces absolute player hitbox footprint", baseCost: 25 },
-            { id: 15, name: "Enemy Decelerator", desc: "Slowing aura friction to world spawning (-2%/lvl)", baseCost: 30 },
-            { id: 16, name: "Critical Strike Matrix", desc: "Chance for 3x critical impact damage (+1%/lvl)", baseCost: 45 },
-            { id: 17, name: "Bounty Target Hunting", desc: "Gives flat gold rewards upon boss defeats", baseCost: 35 },
-            { id: 18, name: "Multi-Shot Modules", desc: "Fires side-projectiles outward symmetrically", baseCost: 100 },
-            { id: 19, name: "Acid Burn Trails", desc: "Leaves hazardous tracking behind character path", baseCost: 55 },
-            { id: 20, name: "Static Tesla Overload", desc: "Zaps nearby units periodically with electricity", baseCost: 65 },
-            { id: 21, name: "Shatter Explode Trigger", desc: "Enemies blow up into sub-fragments on casualty", baseCost: 70 },
-            { id: 22, name: "Overdrive Reload Speed", desc: "Global cooldown structural compression optimization", baseCost: 80 },
-            { id: 23, name: "Heavy Weight Bash", desc: "Running face first into targets damages them", baseCost: 40 },
-            { id: 24, name: "Frostbite Nova Engine", desc: "Slows any unit that makes direct contact with you", baseCost: 50 },
-            { id: 25, name: "Titanium Alloy Bones", desc: "Stun resistance and internal knockback shielding", baseCost: 55 },
-            { id: 26, name: "Nuclear Rad Zone Aura", desc: "Constant passive damage dealing ring perimeter", baseCost: 90 },
-            { id: 27, name: "Adrenaline Serum Dose", desc: "Low health triggers 2x attack rate parameters", baseCost: 75 },
-            { id: 28, name: "Dimensional Safe Pocket", desc: "Temporary safety shield windows when struck", baseCost: 110 },
-            { id: 29, name: "Lucky Dice Roll", desc: "Increases global drop quality chances (+2%/lvl)", baseCost: 30 },
-            { id: 30, name: "Explosive Weapon Ammo", desc: "Bullets trigger impact area explosions on touch", baseCost: 120 },
-            { id: 31, name: "Midas Touched Curse", desc: "Enemies have a chance to turn completely gold", baseCost: 85 },
-            { id: 32, name: "Laser Sight Targeting", desc: "Increases projectile tracking accuracy lines", baseCost: 40 },
-            { id: 33, name: "Berserker Drive Core", desc: "Dying triggers 5 seconds of functional immortality", baseCost: 150 },
-            { id: 34, name: "Laser Grid Barrier", desc: "Generates protective square grid wall configurations", baseCost: 95 },
-            { id: 35, name: "Double Experience Gain", desc: "Increases level scaling speed tracks (+5%/lvl)", baseCost: 25 },
-            { id: 36, name: "Gravity Anchor Pulse", desc: "Pulls outer map drops directly to world center", baseCost: 70 },
-            { id: 37, name: "Sacrificial Blood Rite", desc: "Lose 10 max HP to permanently double raw output", baseCost: 200 },
-            { id: 38, name: "Hyper Speed Dash Drive", desc: "Randomly gives short mini-burst movement warps", baseCost: 65 },
-            { id: 39, name: "Deflection Shield Plate", desc: "Small chance to reflect projectile types entirely", baseCost: 130 },
-            { id: 40, name: "Nanite Core Repair", desc: "Increases potion item recovery multipliers (+4%/lvl)", baseCost: 30 },
-            { id: 41, name: "Corrosive Armor Melt", desc: "Attacked targets lose baseline armor values over time", baseCost: 80 },
-            { id: 42, name: "Sovereign Target Crown", desc: "Elite spawns take 2x additional damage metrics", baseCost: 100 },
-            { id: 43, name: "Meteor Support Strike", desc: "Calls random space environmental damage drops down", baseCost: 140 },
-            { id: 44, name: "Time Warp Distortion", desc: "Freezes enemy paths when taking heavy damage", baseCost: 115 },
-            { id: 45, name: "Sonic Screaming Wave", desc: "Damages everything around you whenever you heal", baseCost: 90 },
-            { id: 46, name: "Plague Spore Outbreak", desc: "Defeated units spread poison damage vectors onto neighbors", baseCost: 105 },
-            { id: 47, name: "Unstable Quantum Core", desc: "Gain massive random statutory metrics changing every minute", baseCost: 160 },
-            { id: 48, name: "Infinity Matrix Blade", desc: "Deals additional absolute executing damage parameters", baseCost: 250 },
-            { id: 49, name: "God King Mandate", desc: "Final tier: Absolute global output stat expansion (+1%/lvl)", baseCost: 500 }
-        ];
-
-        let upgradeLevels = Array(50).fill(0);
-
-        function loadSave() {
-            let savedData = localStorage.getItem("surviving_man_save");
-            if(savedData) {
-                try {
-                    let parsed = JSON.parse(savedData);
-                    if(Array.isArray(parsed) && parsed.length === 50) upgradeLevels = parsed;
-                } catch(e) { console.error(e); }
-            }
-
-            let savedScores = localStorage.getItem("surviving_man_leaderboard");
-            if(savedScores) {
-                try { highScores = JSON.parse(savedScores); } catch(e) { highScores = []; }
-            } else {
-                highScores = [
-                    { name: "Lancelot_AI", score: 2500 },
-                    { name: "Paladin_Beta", score: 1200 },
-                    { name: "CastleSlayer", score: 800 },
-                    { name: "VampHunter", score: 300 },
-                    { name: "LostKnight", score: 100 }
-                ];
-                saveLeaderboard();
-            }
-        }
-
-        function saveGame() { localStorage.setItem("surviving_man_save", JSON.stringify(upgradeLevels)); }
-        function saveLeaderboard() { localStorage.setItem("surviving_man_leaderboard", JSON.stringify(highScores)); }
-
-        function resetSave() {
-            if(confirm("Are you sure you want to completely clear all 50 upgrades?")) {
-                upgradeLevels = Array(50).fill(0);
-                saveGame();
-                buildShopUI();
-                applyUpgrades();
-            }
-        }
-
-        function toggleLeaderboard(show) {
-            const menu = document.getElementById("leaderboardMenu");
-            if (show) { buildLeaderboardUI(); menu.style.display = "flex"; } 
-            else { menu.style.display = "none"; }
-        }
-
-        function buildLeaderboardUI() {
-            const listContainer = document.getElementById("leaderboardList");
-            listContainer.innerHTML = "";
-            highScores.sort((a, b) => b.score - a.score);
-            highScores.slice(0, 5).forEach((entry, idx) => {
-                let row = document.createElement("div");
-                row.className = "leaderboard-row";
-                row.innerHTML = `<span>#${idx + 1} ${entry.name}</span><span>${entry.score} pts</span>`;
-                listContainer.appendChild(row);
-            });
-        }
-
-        function checkAndAddHighScore(finalScore) {
-            highScores.sort((a, b) => b.score - a.score);
-            if (highScores.length < 5 || finalScore > highScores[highScores.length - 1].score) {
-                setTimeout(() => {
-                    let userName = prompt("🏆 NEW HIGH SCORE IN THE CASTLE! Enter your name:", "Knight");
-                    if (!userName || userName.trim() === "") userName = "Unknown Knight";
-                    highScores.push({ name: userName.substring(0, 14), score: finalScore });
-                    highScores.sort((a, b) => b.score - a.score);
-                    highScores = highScores.slice(0, 10);
-                    saveLeaderboard();
-                }, 500);
-            }
-        }
-
-        loadSave();
-
-        function startGame() {
-            document.getElementById("mainMenu").style.display = "none";
-            gameActive = true;
-            applyUpgrades();
-            generateCastleStructures();
-            player.x = 0; player.y = 0;
-            player.hp = player.maxHp;
-            enemies = []; bullets = []; gems = []; score = 0; wave = 1; kills = 0;
-            document.getElementById("hp").innerText = Math.floor(player.hp);
-            document.getElementById("maxHpDisplay").innerText = Math.floor(player.maxHp);
-            document.getElementById("kills").innerText = "0";
-            document.getElementById("gold").innerText = gold;
-            buildShopUI();
-        }
-
-        function toggleShop() {
-            let s = document.getElementById("shopMenu");
-            s.style.display = s.style.display === "block" ? "none" : "block";
-        }
-
-        function buildShopUI() {
-            const container = document.getElementById("upgradeListContainer");
-            container.innerHTML = "";
-            upgradeDef.forEach(up => {
-                let lvl = upgradeLevels[up.id];
-                let cost = Math.floor(up.baseCost * Math.pow(1.22, lvl));
-                let isMax = lvl >= 50;
-
-                let row = document.createElement("div");
-                row.className = "upgrade-row";
-                row.innerHTML = `
-                    <div class="upgrade-info"><span>${up.id + 1}. ${up.name}</span><span style="color:${isMax?'#ff3333':'#00ffcc'}">Lvl ${lvl}/50</span></div>
-                    <div class="upgrade-meta">
-                        <div class="upgrade-desc">${up.desc}</div>
-                        <button class="buy-btn" id="btn-up-${up.id}" onclick="buyUpgrade(${up.id})" ${isMax || gold < cost ? 'disabled' : ''}>${isMax ? 'MAX' : '$' + cost}</button>
-                    </div>
-                `;
-                container.appendChild(row);
-            });
-        }
-
-        function buyUpgrade(id) {
-            let up = upgradeDef[id];
-            let lvl = upgradeLevels[id];
-            let cost = Math.floor(up.baseCost * Math.pow(1.22, lvl));
-            if(gold >= cost && lvl < 50) {
-                gold -= cost; upgradeLevels[id]++; saveGame(); applyUpgrades(); buildShopUI();
-                document.getElementById("gold").innerText = gold;
-            }
-        }
-
-        function applyUpgrades() {
-            player.maxHp = 100 + (upgradeLevels[0] * 15);
-            document.getElementById("maxHpDisplay").innerText = player.maxHp;
-        }
-
-        window.addEventListener('pointerdown', (e) => { if(!gameActive)return; isMoving = true; updateTarget(e); });
-        window.addEventListener('pointermove', (e) => { if(!gameActive || !isMoving)return; updateTarget(e); });
-        window.addEventListener('pointerup', () => { isMoving = false; });
-        function updateTarget(e) {
-            const rect = canvas.getBoundingClientRect();
-            targetX = e.clientX - rect.left; targetY = e.clientY - rect.top;
-        }
-
-        function spawnEnemy() {
-            if(!gameActive) return;
-            let maxEnemies = 35 + (wave * 5);
-            if(enemies.length < maxEnemies) {
-                let angle = Math.random() * Math.PI * 2;
-                let spawnDist = canvas.width > canvas.height ? canvas.width : canvas.height;
-                // Spawn in absolute world coordinates surrounding player
-                let ex = player.x + Math.cos(angle) * (spawnDist * 0.7);
-                let ey = player.y + Math.sin(angle) * (spawnDist * 0.7);
-
-                let speedMod = 1 + (wave * 0.08) - (upgradeLevels[15] * 0.02);
-                enemies.push({ x: ex, y: ey, size: 14, speed: Math.max(0.7, 1.2 * speedMod), animFrame: Math.random() * 10 });
-            }
-        }
-        setInterval(spawnEnemy, 300);
-        setInterval(() => { if(gameActive) { wave++; document.getElementById("wave").innerText = wave; } }, 15000);
-
-        // MODEL DRAWING PROCEDURES
-        function drawKnightPlayer(x, y, size, facingDir) {
-            ctx.save();
-            ctx.translate(x, y);
-            ctx.scale(facingDir, 1);
-
-            // Armor shoulders/body
-            ctx.fillStyle = "#555f63";
-            ctx.fillRect(-size/2, -size/4, size, size*0.8);
-            ctx.fillStyle = "#3a4145";
-            ctx.fillRect(-size/3, -size/4, size/1.5, size*0.8);
-
-            // Helmet
-            ctx.fillStyle = "#7f8c8d";
-            ctx.beginPath();
-            ctx.arc(0, -size/3, size/2, 0, Math.PI, true);
-            ctx.fill();
-            ctx.fillRect(-size/2, -size/3, size, size/3);
-
-            // Neon Glowing Cyan Visor Line
-            ctx.fillStyle = "#00ffcc";
-            ctx.shadowColor = "#00ffcc";
-            ctx.shadowBlur = 6;
-            ctx.fillRect(0, -size/3, size/2, 3);
-            
-            // Gold trim shield element on chest
-            ctx.shadowBlur = 0;
-            ctx.fillStyle = "#d4af37";
-            ctx.beginPath();
-            ctx.moveTo(-2, 2); ctx.lineTo(2, 2); ctx.lineTo(0, 7);
-            ctx.closePath(); ctx.fill();
-
-            ctx.restore();
-        }
-
-        function drawGargoyleEnemy(x, y, size, frame) {
-            ctx.save();
-            ctx.translate(x, y);
-
-            let wingFlap = Math.sin(frame * 0.3) * 8;
-
-            // Wing Left & Right
-            ctx.fillStyle = "#2c252d";
-            ctx.beginPath();
-            ctx.moveTo(-4, -2); ctx.lineTo(-size - 4, -size/2 + wingFlap); ctx.lineTo(-size/2, size/2);
-            ctx.closePath(); ctx.fill();
-            ctx.beginPath();
-            ctx.moveTo(4, -2); ctx.lineTo(size + 4, -size/2 + wingFlap); ctx.lineTo(size/2, size/2);
-            ctx.closePath(); ctx.fill();
-
-            // Gargoyle Torso
-            ctx.fillStyle = "#4a3c4e";
-            ctx.beginPath();
-            ctx.arc(0, 4, size/2, 0, Math.PI*2);
-            ctx.fill();
-
-            // Gargoyle Head
-            ctx.fillStyle = "#5c4d61";
-            ctx.beginPath();
-            ctx.arc(0, -size/3, size/2.5, 0, Math.PI*2);
-            ctx.fill();
-
-            // Horns
-            ctx.fillStyle = "#1e1522";
-            ctx.beginPath();
-            ctx.moveTo(-4, -size/2); ctx.lineTo(-7, -size); ctx.lineTo(-1, -size/2);
-            ctx.closePath(); ctx.fill();
-            ctx.beginPath();
-            ctx.moveTo(4, -size/2); ctx.lineTo(7, -size); ctx.lineTo(1, -size/2);
-            ctx.closePath(); ctx.fill();
-
-            // Demonic Glowing Crimson Eyes
-            ctx.fillStyle = "#ff2233";
-            ctx.shadowColor = "#ff2233";
-            ctx.shadowBlur = 5;
-            ctx.fillRect(-4, -size/2.5, 2, 2);
-            ctx.fillRect(2, -size/2.5, 2, 2);
-
-            ctx.restore();
-        }
-
-        function loop() {
-            if (gameActive) {
-                // Passive Health Regeneration
-                if(player.hp < player.maxHp && upgradeLevels[6] > 0) {
-                    player.hp = Math.min(player.maxHp, player.hp + (upgradeLevels[6] * 0.02));
-                    document.getElementById("hp").innerText = Math.floor(player.hp);
-                }
-
-                // Smooth World Vector Movement
-                let calculatedSpeed = player.speed * (1 + (upgradeLevels[1] * 0.06));
-                if (isMoving) {
-                    let dx = targetX - player.screenX; let dy = targetY - player.screenY;
-                    let dist = Math.sqrt(dx * dx + dy * dy);
-                    if (dist > 6) {
-                        let moveX = (dx / dist) * calculatedSpeed;
-                        let moveY = (dy / dist) * calculatedSpeed;
-                        player.x += moveX;
-                        player.y += moveY;
-                        if(moveX !== 0) player.dir = moveX > 0 ? 1 : -1;
-                    }
-                }
-
-                // Camera smoothly locks over player world coordinates
-                camera.x = player.x - player.screenX;
-                camera.y = player.y - player.screenY;
-
-                // Automatic Weapon Striking Fire System
-                shootCooldown--;
-                if (shootCooldown <= 0 && enemies.length > 0) {
-                    let closest = enemies[0]; let minDist = Infinity;
-                    enemies.forEach(e => {
-                        let d = Math.sqrt((e.x - player.x)**2 + (e.y - player.y)**2);
-                        if (d < minDist) { minDist = d; closest = e; }
-                    });
-                    
-                    let angle = Math.atan2(closest.y - player.y, closest.x - player.x);
-                    let bVel = 6 * (1 + (upgradeLevels[2] * 0.08));
-                    let pierceVal = 1 + upgradeLevels[7];
-
-                    // Projectiles track from player world hub position
-                    bullets.push({ x: player.x, y: player.y, vx: Math.cos(angle)*bVel, vy: Math.sin(angle)*bVel, pierce: pierceVal });
-
-                    if(upgradeLevels[18] > 0) {
-                        let leftAng = angle - 0.32; let rightAng = angle + 0.32;
-                        bullets.push({ x: player.x, y: player.y, vx: Math.cos(leftAng)*bVel, vy: Math.sin(leftAng)*bVel, pierce: pierceVal });
-                        bullets.push({ x: player.x, y: player.y, vx: Math.cos(rightAng)*bVel, vy: Math.sin(rightAng)*bVel, pierce: pierceVal });
-                    }
-
-                    let baseInterval = 22;
-                    shootCooldown = Math.max(5, baseInterval - (upgradeLevels[3] * 0.4));
-                }
-
-                // Process Projectiles
-                bullets.forEach((b, bIdx) => {
-                    b.x += b.vx; b.y += b.vy;
-                    let distFromPlayer = Math.sqrt((b.x - player.x)**2 + (b.y - player.y)**2);
-                    if(distFromPlayer > 600) bullets.splice(bIdx, 1);
-                });
-
-                // Process Gold Chest Gems
-                gems.forEach((g, gIdx) => {
-                    let dx = player.x - g.x; let dy = player.y - g.y;
-                    let dist = Math.sqrt(dx * dx + dy * dy);
-                    let pullRange = 64 + (upgradeLevels[5] * 20);
-
-                    if(dist < pullRange) {
-                        g.x += (dx / dist) * 7; g.y += (dy / dist) * 7;
-                    }
-                    if(dist < player.size + 6) {
-                        gems.splice(gIdx, 1);
-                        let reward = 1 + Math.floor(Math.random() * 3);
-                        let bonus = 1 + (upgradeLevels[8] * 0.15);
-                        gold += Math.floor(reward * bonus); score += 5;
-                        document.getElementById("gold").innerText = gold;
-                        buildShopUI();
-                    }
-                });
-
-                // Process Gargoyle Monsters AI tracking
-                enemies.forEach((e, eIdx) => {
-                    let dx = player.x - e.x; let dy = player.y - e.y;
-                    let dist = Math.sqrt(dx * dx + dy * dy);
-
-                    e.x += (dx / dist) * e.speed;
-                    e.y += (dy / dist) * e.speed;
-                    e.animFrame += 1; // Increment flap wing cycle index
-
-                    // Collision check with Knight player
-                    if (dist < player.size + e.size - 4) {
-                        let baseDmg = 0.5;
-                        let reduction = upgradeLevels[10] * 0.01;
-                        player.hp -= Math.max(0.1, baseDmg - reduction);
-                        document.getElementById("hp").innerText = Math.max(0, Math.floor(player.hp));
-
-                        if(player.hp <= 0) {
-                            gameActive = false;
-                            alert("Slain in the Castle! Total Score: " + score);
-                            document.getElementById("mainMenu").style.display = "flex";
-                            checkAndAddHighScore(score);
-                        }
-                    }
-
-                    // Collision check with Weapons
-                    bullets.forEach((b, bIdx) => {
-                        let bDist = Math.sqrt((b.x - e.x)**2 + (b.y - e.y)**2);
-                        if(bDist < e.size + 6) {
-                            if(upgradeLevels[9] > 0) {
-                                e.x -= (dx / dist) * (upgradeLevels[9] * 3);
-                                e.y -= (dy / dist) * (upgradeLevels[9] * 3);
-                            }
-
-                            b.pierce--;
-                            if(b.pierce <= 0) bullets.splice(bIdx, 1);
-                            
-                            enemies.splice(eIdx, 1);
-                            kills++; score += 10;
-                            document.getElementById("kills").innerText = kills;
-
-                            if(upgradeLevels[11] > 0 && Math.random() < (upgradeLevels[11] * 0.005)) {
-                                player.hp = Math.min(player.maxHp, player.hp + 1);
-                                document.getElementById("hp").innerText = Math.floor(player.hp);
-                            }
-                            gems.push({ x: e.x, y: e.y });
-                        }
-                    });
-                });
-            }
-
-            // RENDERING - ENVIRONMENT CAMERA GRAPHICS SYSTEM
-            ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-            // 1. Procedural Gothic Stone Grid Background Tiles
-            let tileSize = 64;
-            let startTileX = Math.floor(camera.x / tileSize) * tileSize;
-            let startTileY = Math.floor(camera.y / tileSize) * tileSize;
-
-            for (let tx = startTileX - tileSize; tx < startTileX + canvas.width + tileSize; tx += tileSize) {
-                for (let ty = startTileY - tileSize; ty < startTileY + canvas.height + tileSize; ty += tileSize) {
-                    let renderX = tx - camera.x;
-                    let renderY = ty - camera.y;
-
-                    // Alternating brick color values safely
-                    ctx.fillStyle = ((Math.abs(tx + ty) / tileSize) % 2 === 0) ? "#141a14" : "#101410";
-                    ctx.fillRect(renderX, renderY, tileSize, tileSize);
-
-                    // Tiny aesthetic brick line grids
-                    ctx.strokeStyle = "rgba(0,0,0,0.15)";
-                    ctx.lineWidth = 1;
-                    ctx.strokeRect(renderX, renderY, tileSize, tileSize);
-                }
-            }
-
-            // 2. Render Massive Castle Environmental Structures
-            castleStructures.forEach(struct => {
-                let rx = struct.x - camera.x;
-                let ry = struct.y - camera.y;
-
-                // Simple check if it is within view bounds to optimize render workloads
-                if(rx > -60 && rx < canvas.width + 60 && ry > -60 && ry < canvas.height + 60) {
-                    if(struct.type === 'pillar') {
-                        // Shadow base
-                        ctx.fillStyle = "rgba(0,0,0,0.4)";
-                        ctx.fillRect(rx - 2, ry + struct.h - 6, struct.w + 4, 8);
-                        // Dark Stone Column Shaft
-                        ctx.fillStyle = "#222d22";
-                        ctx.fillRect(rx, ry, struct.w, struct.h);
-                        ctx.fillStyle = "#2d3d2d"; // Highlights
-                        ctx.fillRect(rx, ry, 5, struct.h);
-                        ctx.fillRect(rx, ry, struct.w, 6);
-                        ctx.fillRect(rx, ry + struct.h - 8, struct.w, 8);
-                    } else {
-                        // Brick wall structure
-                        ctx.fillStyle = "rgba(0,0,0,0.4)";
-                        ctx.fillRect(rx - 4, ry + struct.h - 4, struct.w + 8, 6);
-                        ctx.fillStyle = "#1c241c";
-                        ctx.fillRect(rx, ry, struct.w, struct.h);
-                        ctx.strokeStyle = "#314231";
-                        ctx.lineWidth = 2;
-                        ctx.strokeRect(rx, ry, struct.w, struct.h);
-                    }
-                }
-            });
-
-            // 3. Render Drop Loot Crystals
-            gems.forEach(g => {
-                let rx = g.x - camera.x; let ry = g.y - camera.y;
-                ctx.fillStyle = "#ffcc00";
-                ctx.shadowColor = "#ffcc00"; ctx.shadowBlur = 4;
-                ctx.beginPath();
-                ctx.moveTo(rx, ry - 5); ctx.lineTo(rx + 4, ry); ctx.lineTo(rx, ry + 5); ctx.lineTo(rx - 4, ry);
-                ctx.closePath(); ctx.fill();
-                ctx.shadowBlur = 0;
-            });
-
-            // 4. Render Active Magical Shield Ring Module Modifiers
-            if(gameActive && upgradeLevels[12] > 0) {
-                let count = Math.min(6, upgradeLevels[12]);
-                let time = Date.now() * 0.003;
-                for(let i=0; i<count; i++) {
-                    let angle = time + (i * (Math.PI * 2 / count));
-                    let orbitWorldX = player.x + Math.cos(angle) * 55;
-                    let orbitWorldY = player.y + Math.sin(angle) * 55;
-                    
-                    let rx = orbitWorldX - camera.x;
-                    let ry = orbitWorldY - camera.y;
-
-                    ctx.fillStyle = "#e67e22";
-                    ctx.shadowColor = "#e67e22"; ctx.shadowBlur = 8;
-                    ctx.beginPath(); ctx.arc(rx, ry, 5, 0, Math.PI*2); ctx.fill();
-                    ctx.shadowBlur = 0;
-
-                    // Shield orbits check collision loop
-                    enemies.forEach((e, eIdx) => {
-                        let gDist = Math.sqrt((e.x - orbitWorldX)**2 + (e.y - orbitWorldY)**2);
-                        if(gDist < e.size + 4) {
-                            enemies.splice(eIdx, 1); kills++; score += 10;
-                            document.getElementById("kills").innerText = kills;
-                            gems.push({ x: e.x, y: e.y });
-                        }
-                    });
-                }
-            }
-
-            // 5. Render Monsters (Gargoyles)
-            enemies.forEach(e => {
-                let rx = e.x - camera.x; let ry = e.y - camera.y;
-                drawGargoyleEnemy(rx, ry, e.size, e.animFrame);
-            });
-
-            // 6. Render Glowing White Silver Projectiles
-            ctx.fillStyle = "#ffffff";
-            bullets.forEach(b => {
-                ctx.beginPath(); ctx.arc(b.x - camera.x, b.y - camera.y, 3.5, 0, Math.PI*2); ctx.fill();
-            });
-
-            // 7. Render Knight Player Character Model (Locked at Screen Center Matrix)
-            if (gameActive) {
-                drawKnightPlayer(player.screenX, player.screenY, player.size, player.dir);
-            }
-
-            requestAnimationFrame(loop);
-        }
-
-        buildShopUI();
-        loop();
-    </script>
+</div>
+
+<div id="main">
+    <iframe name="gameFrame" id="gameFrame" src="https://www.google.com"></iframe>
+</div>
+
+<script>
+    function goHome() { document.getElementById('gameFrame').src = "https://www.google.com"; }
+
+    const games = [
+        { name: "Cruelty Squad", url: "https://securerootx.github.io/cruelty-squad/" },
+        { name: "Post Void", url: "https://radon.games/archive/post-void/" },
+        { name: "Ultrakill", url: "https://securerootx.github.io/ultrakill/" },
+        { name: "Eaglercraft 1.8", url: "https://eaglercraft.com/" },
+        { name: "FNAF 1", url: "https://fnafweb.github.io/fnaf1/" },
+        { name: "Stardew Valley", url: "https://stardew-valley-web.github.io/" },
+        { name: "Call of Duty", url: "https://now.gg/play/activision-publishing/2733/call-of-duty-mobile" },
+        { name: "GTA San Andreas", url: "https://gta-sa.github.io/" },
+        { name: "Osu! Mania", url: "https://osu.ppy.sh/community/forums/topics/1085207" },
+        { name: "Friday Night Funkin'", url: "https://fnf.kBHgames.com/" }
+    ];
+
+    const grid = document.getElementById('gameGrid');
+    games.forEach(g => {
+        const div = document.createElement('div');
+        div.className = 'card';
+        div.innerText = g.name;
+        div.onclick = () => { document.getElementById('gameFrame').src = g.url; };
+        grid.appendChild(div);
+    });
+</script>
 </body>
 </html>
