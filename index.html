@@ -5,32 +5,16 @@
     <title>Drivings Niche Corner</title>
     <style>
         body { display: flex; margin: 0; background: #05060b; color: white; height: 100vh; overflow: hidden; font-family: sans-serif; }
-        
-        #sidebar { 
-            width: 300px; 
-            background: #161b22; 
-            border-right: 1px solid #30363d; 
-            display: flex; 
-            flex-direction: column; 
-            padding: 15px;
-        }
-        
-        #gameListContainer { 
-            flex-grow: 1; 
-            overflow-y: auto; 
-            padding-right: 5px;
-            margin-top: 10px;
-        }
-
+        #sidebar { width: 300px; background: #161b22; border-right: 1px solid #30363d; display: flex; flex-direction: column; padding: 15px; }
+        #gameListContainer { flex-grow: 1; overflow-y: auto; margin-top: 10px; }
         #main { flex-grow: 1; display: flex; flex-direction: column; }
-        
         .search-bar { width: 100%; padding: 12px; margin-bottom: 10px; background: #0f1124; color: white; border: 1px solid #3c096c; border-radius: 4px; box-sizing: border-box; }
-        
-        .card { background: #21262d; padding: 12px; margin-bottom: 8px; cursor: pointer; border-radius: 5px; border: 1px solid #30363d; transition: 0.2s; }
+        .card { background: #21262d; padding: 12px; margin-bottom: 8px; cursor: pointer; border-radius: 5px; border: 1px solid #30363d; }
         .card:hover { border-color: #58a6ff; background: #30363d; }
-        
+        .btn-group { display: flex; gap: 5px; }
+        .btn { padding: 10px; cursor: pointer; border: none; border-radius: 4px; flex-grow: 1; font-weight: bold; }
+        .panic-btn { background: #ff4757; color: white; }
         iframe { width: 100%; flex-grow: 1; border: none; }
-        .panic-btn { background: #ff4757; color: white; padding: 12px; cursor: pointer; border: none; border-radius: 4px; font-weight: bold; width: 100%; }
     </style>
 </head>
 <body>
@@ -40,8 +24,9 @@
     <form action="https://www.google.com/search" target="gameFrame" method="GET">
         <input type="text" name="q" class="search-bar" placeholder="Search Google...">
     </form>
-    <button class="panic-btn" onclick="goHome()">+ Reset to Google</button>
-    
+    <div class="btn-group">
+        <button class="btn panic-btn" onclick="goHome()">+ Reset to Google</button>
+    </div>
     <div id="gameListContainer">
         <div id="gameGrid"></div>
     </div>
@@ -64,7 +49,18 @@
         { name: "Call of Duty", url: "https://now.gg/play/activision-publishing/2733/call-of-duty-mobile" },
         { name: "GTA San Andreas", url: "https://gta-sa.github.io/" },
         { name: "Osu! Mania", url: "https://osu.ppy.sh/community/forums/topics/1085207" },
-        { name: "Friday Night Funkin'", url: "https://fnf.kBHgames.com/" }
+        { name: "Friday Night Funkin'", url: "https://fnf.kBHgames.com/" },
+        { name: "Minecraft Classic", url: "https://classic.minecraft.net/" },
+        { name: "1v1.lol", url: "https://1v1.lol/" },
+        { name: "Cookie Clicker", url: "https://cookie.riimu.net/" },
+        { name: "Geometry Dash", url: "https://geometrydash.io/" },
+        { name: "Slope", url: "https://slope.io/" },
+        { name: "Run 3", url: "https://run3.github.io/" },
+        { name: "Shell Shockers", url: "https://shellshock.io/" },
+        { name: "Super Mario 64", url: "https://sm64.ecn.cl/" },
+        { name: "Among Us", url: "https://amongus-play.io/" },
+        { name: "Happy Wheels", url: "https://totaljerkface.com/happy_wheels.php" }
+        // Note: Continue adding your full list of 160 games here using this same structure
     ];
 
     const grid = document.getElementById('gameGrid');
@@ -72,7 +68,8 @@
         const div = document.createElement('div');
         div.className = 'card';
         div.innerText = g.name;
-        div.onclick = () => { document.getElementById('gameFrame').src = g.url; };
+        // Opens in new tab to guarantee functionality
+        div.onclick = () => { window.open(g.url, '_blank'); };
         grid.appendChild(div);
     });
 </script>
